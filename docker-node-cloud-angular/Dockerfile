@@ -1,13 +1,19 @@
-### STAGE 1: Build ###
-FROM node:12.7-alpine AS build
+# Client app
+FROM node:12.7-alpine AS client-app
+
+LABEL authors="Ravi Ranjan"
 WORKDIR /usr/src/app
+COPY ["package.json", "package-lock.json", "./"]
+RUN npm install --silent
 COPY . .
-RUN npm install
 RUN npm run build
 
 
-### STAGE 2: Run ###
+# Final Image
 
-FROM nginx:1.17.1-alpine
-COPY --from=build /usr/src/app/dist/docker-node-cloud-angular /usr/share/nginx/html
+FROM node:12.7-alpine
+WORKDIR /usr/src/app
 
+COPY --from=client-app /usr/src/app/dist ./
+EXPOSE 8626
+CMD [ "npm" , "start"]

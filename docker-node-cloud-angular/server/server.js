@@ -20,16 +20,26 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser');
 
-// Constants
-const PORT = 3000;
-const HOST = '0.0.0.0';
+function start() {
+  const app = express();
+  // Constants
+  const port = process.env.PORT || 8626;
+  const www = process.env.WWW || './';
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }))
 
-// App
-const app = express();
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
+  app.use(express.static(www));
+  console.log(`serving ${www}`);
+  app.get('*', (req, res) => {
+    res.sendFile(`index.html`, {
+      root: www
+    });
+  });
+  app.listen(port, () => captains.log(`listening on http://localhost:${port}`));
+}
 
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+module.exports.start = start;
