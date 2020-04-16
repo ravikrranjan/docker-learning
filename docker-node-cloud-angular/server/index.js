@@ -26,7 +26,7 @@ function start() {
   const app = express();
   // Constants
   const port = process.env.PORT || 8626;
-  const www = process.env.WWW || './';
+  const www = process.env.WWW || './dist/docker-node-cloud-angular';
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
     extended: false
@@ -39,7 +39,7 @@ function start() {
       root: www
     });
   });
-  app.listen(port, () => captains.log(`listening on http://localhost:${port}`));
+  app.listen(port, () => console.log(`listening on http://localhost:${port}`));
 }
 
 module.exports.start = start;
